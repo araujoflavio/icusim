@@ -75,7 +75,7 @@ def run_simulation(dias, leitos):
 
 if __name__ == '__main__':
     env = simpy.Environment()
-    sim = ICUSim(env  leitos=10)
+    sim = ICUSim(env,  leitos=10)
     env.process(sim.cria_paciente())
     env.run(until=30*24)
 
