@@ -31,6 +31,14 @@ st.set_page_config(
 
 st.title("Simulação de UTI")
 
+# Items a serem implementados
+    # quande de pacientes por dia
+    # tempo de internação
+    # tempo máximo de espera
+
+
+
+
 dias = st.slider("Dias de simulação", 30, 365, 30)
 leitos = st.slider("Número de leitos", 1, 100, 10)
 numero_simulacoes = st.slider("Número de simulações", 1, 1000, 1)
@@ -56,4 +64,17 @@ if st.button("Iniciar simulação"):
         st.write(f"Pacientes atendidos: {sim.pacientes_atendidos}")
         st.write(f"Pacientes perdidos: {sim.pacientes_perdidos}")
 
+        st.write(f"Pacintes perdidos {sim.pacientes_perdidos/sim.total_pacientes*100:0.2f} %")
         st.write(sim.lista_pacientes)
+# itens para análise
+    # total de pacientes
+    # pacientes solicitados
+    # pacientes internados
+    # pacientes atendidos
+    # pacientes perdidos
+
+    # paciente dia da unidade
+    # taxa de ocupação
+    # tempo de internacao
+    # tempo de espera - de admitidos e de perdidos
+    # relacao de pacietes perdidos/total de pacientes solicitados
