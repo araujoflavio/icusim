@@ -18,7 +18,7 @@ class ICUSim():
 
         self.leitos = simpy.Resource(self.env, capacity=self.LEITOS)
 
-    def paciente(self, nome, tempo_internacao):
+    def paciente(self, nome, tempo_max_espera, tempo_internacao):
         
         # tempo de chegada do paciente
         t0 = self.env.now
@@ -28,7 +28,7 @@ class ICUSim():
             yield req
             # tempo de possibilidade de vaga
             t1 = self.env.now
-            if t1 - t0 < self.TEMPO_MAX_ESPERA:
+            if t1 - t0 < tempo_max_espera:
                 # critério para internação
                 self.pacientes_solicitacao -= 1
                 self.adiciona_paciente(nome, t0=t0, t1=t1)
@@ -44,14 +44,11 @@ class ICUSim():
                 self.pacientes_solicitacao -= 1
                 self.pacientes_perdidos += 1
                 t2 = -1
-                
-
 
             self.adiciona_paciente(nome, t0=t0, t1=t1, t2=t2)
     
     def cria_paciente(self):
         paciente_nome = 0
-        
         
         while True:
             self.total_pacientes += 1
@@ -60,7 +57,7 @@ class ICUSim():
             yield self.env.timeout(random.randint(2, 12))
             
             tempo_internacao = random.randint(self.TEMPO_INTERNACAO[0], self.TEMPO_INTERNACAO[1])       
-            self.env.process(self.paciente(paciente_nome, tempo_internacao))
+            self.env.process(self.paciente(paciente_nome, self.TEMPO_MAX_ESPERA, tempo_internacao))
             
             paciente_nome += 1
 
@@ -78,7 +75,7 @@ def run_simulation(dias, leitos):
 
 if __name__ == '__main__':
     env = simpy.Environment()
-    sim = ICUSim(env)
+    sim = ICUSim(env  leitos=10)
     env.process(sim.cria_paciente())
     env.run(until=30*24)
 
@@ -92,7 +89,7 @@ if __name__ == '__main__':
     perdas = []
     for i in range(50):
         env = simpy.Environment()
-        sim = ICUSim(env)
+        sim = ICUSim(env, leitos=10)
         env.process(sim.cria_paciente())
         env.run(until=30*24)
         perdas.append(sim.pacientes_perdidos)
